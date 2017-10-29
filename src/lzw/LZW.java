@@ -5,9 +5,11 @@
  */
 package lzw;
 
+import java.util.HashMap;
+
 /**
  *
- * @author tumesh
+ * @author tumeshS
  */
 public class LZW {
 
@@ -16,6 +18,16 @@ public class LZW {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Compressor c1 = new Compressor("str.txt");
+        //System.out.println(c1.getStringToCompress());
+        c1.compress();
+        //String s1 = "Apple";
+        //String s2 = s1;
+        HashMap h1 = c1.getDict();
+        System.out.println(h1.get("He"));
+        
+        
+        
     }
     
 }
