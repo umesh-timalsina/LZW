@@ -37,6 +37,7 @@ public class Reader {
 //                textToCompress += !(input.next().equals("\n"))?
 //                                        input.next():" "; // ignore new line marker
                   textToCompress += input.nextLine() + '\n';
+                  textToCompress = textToCompress.trim();
             }// return text to compress as a single string
         }//end try
         catch(NoSuchElementException noSuchElementException){

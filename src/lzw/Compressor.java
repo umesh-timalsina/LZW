@@ -22,11 +22,12 @@ public class Compressor {
         this.r1 = new Reader();
         this.fileName = fileName;
         r1.openFile(fileName);
-        this.stringToCompress = r1.returnTextToCompress();
+        //this.stringToCompress = r1.returnTextToCompress();
+        this.stringToCompress = "aaabbbbbbaabaaba";
         this.compressedString = "";
         r1.closeFile();
-        this.formInitialTable();
-        this.numCodes = 256;
+        this.numCodes = 0;
+        this.formInitialTable2();
     } // End Constructor
     
     private void formInitialTable(){
@@ -36,27 +37,55 @@ public class Compressor {
         }
     }// Form the initial mapping able
     
-    public boolean compress(){
-        String sb1 = this.stringToCompress;
-        sb1 = sb1.trim();
-        String searchString;
-        for(int i = 0; i < sb1.length(); i++){
-            searchString = sb1.substring(0, sb1.length()-i);
-            if(this.dict.get(searchString) != null){
-                this.compressedString += this.dict.get(searchString) + "\n";
-                sb1=sb1.replaceFirst(searchString, "");
-                searchString+=((sb1==null)?"":sb1.charAt(1));
-                this.dict.put(searchString, new MyInteger(++this.numCodes));
-            }
-        }
-        return true;
+    private void formInitialTable2(){
+        this.dict = new HashMap();    
+        this.dict.put("a", new MyInteger(0)); // put values in dict
+        this.dict.put("b", new MyInteger(1));
+        this.numCodes+=2;
+    }// Form the initial mapping able
+    
+    
+    
+   public boolean compress(){
+       String sb = this.stringToCompress;
+       String match = "";
+       for(int i = 0; i < sb.length(); i++){
+           if(this.dict.get(sb.substring(0, sb.length()-i)) != null){ 
+               match = sb.substring(0, sb.length()-i);
+               System.out.println("Matched " + match);
+               this.compressedString += (this.dict.get(match)).code;
+               this.stringToCompress = this.stringToCompress.replaceFirst(match, "");
+               sb = this.stringToCompress;
+               System.out.println("The new string is" + stringToCompress);
+               updateTable(match);
+           }
+       }
+       if(!stringToCompress.isEmpty()) compress();
+       
+       return true;
+   }
+   private void updateTable(String s){
+       if(!this.stringToCompress.isEmpty()){
+           s=s+this.stringToCompress.charAt(0);
+           this.dict.put(s, new MyInteger(numCodes));
+           System.out.println("Added pattern " + s + this.numCodes + "to the dict");
+           this.numCodes++;
+       }
+   } 
+   
+    private String findPattern(String s){
+        String matchedPattern = "";
+        if(this.dict.get(s) != null);
+            matchedPattern = s;
+        return matchedPattern;
     }
+   
     
     private void updateDict(String pattern, int index){
         if(index < this.stringToCompress.length()-1){
             pattern = pattern+this.stringToCompress.charAt(index+1);
             System.out.println(pattern);
-            this.dict.put(pattern, new MyInteger(++this.numCodes));
+            this.dict.put(pattern, new MyInteger(this.numCodes++));
         }
     }
     
